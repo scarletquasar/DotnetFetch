@@ -102,5 +102,17 @@ namespace DotnetFetch
 
             return new();
         }
+
+        public static async Task<T> Fetch<T>(
+            string resource,
+            JsonObject options,
+            CancellationToken cancellationToken = default
+        )
+        {
+            var response = await Fetch(resource, options, cancellationToken);
+            var result = JsonSerializer.Deserialize<T>(response.Body);
+
+            return result!;
+        }
     }
 }
