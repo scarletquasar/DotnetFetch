@@ -9,10 +9,29 @@ namespace DotnetFetch
         {
             var headers = options["headers"] ?? new JsonObject();
             var body = options["body"] ?? new JsonObject();
-            var method = options["method"]?.ToString() ?? "get"; //get | post | delete | put | patch | head |options
-            var mode = options["mode"]?.ToString() ?? "no-cors"; //cors | no-cors | same-origin
-            var credentials = options["credentials"]?.ToString() ?? "same-orgin"; //omit | same-origin | include
 
+            //get | post | delete | put | patch | head |options
+            var method = options["method"]?.ToString() ?? "get";
+
+            //cors | no-cors | same-origin
+            var mode = options["mode"]?.ToString() ?? "no-cors";
+
+            //omit | same-origin | include
+            var credentials = options["credentials"]?.ToString() ?? "same-orgin";
+
+            //default | no-store | reload | no-cache | force-cache | only-if-cached
+            var cache = options["cache"]?.ToString() ?? "default";
+
+            //follow | error | manual
+            var redirect = options["redirect"]?.ToString() ?? "follow";
+
+            //[origin url] | about&nbsp:client
+            var referrer = options["referrer"]?.ToString() ?? "";
+
+            var integrity = options["integrity"]?.ToString() ?? "";
+            var keepAlive = (bool)(options["integrity"] ?? false);
+
+            //TODO: implement [signal] usage as AbortSignal
 
             return new();
         }
