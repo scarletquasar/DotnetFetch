@@ -9,36 +9,36 @@ namespace DotnetFetch
     {
         public static async Task<Response> Fetch(
             string resource, 
-            JsonObject options, 
+            JsonObject? options = default, 
             CancellationToken cancellationToken = default
         )
         {
             // Arrange: will get all the possible information from "options"
             // object, in order to make the request based in the user needs
 
-            var headers = options["headers"] ?? new JsonObject();
-            var body = options["body"]?.ToJsonString() ?? "";
+            var headers = options?["headers"] ?? new JsonObject();
+            var body = options?["body"]?.ToJsonString() ?? "";
 
             //get | post | delete | put | patch | head |options
-            var method = options["method"]?.ToString() ?? "get";
+            var method = options?["method"]?.ToString() ?? "get";
 
             //cors | no-cors | same-origin
-            var mode = options["mode"]?.ToString() ?? "no-cors";
+            var mode = options?["mode"]?.ToString() ?? "no-cors";
 
             //omit | same-origin | include
-            var credentials = options["credentials"]?.ToString() ?? "same-orgin";
+            var credentials = options?["credentials"]?.ToString() ?? "same-orgin";
 
             //default | no-store | reload | no-cache | force-cache | only-if-cached
-            var cache = options["cache"]?.ToString() ?? "default";
+            var cache = options?["cache"]?.ToString() ?? "default";
 
             //follow | error | manual
-            var redirect = options["redirect"]?.ToString() ?? "follow";
+            var redirect = options?["redirect"]?.ToString() ?? "follow";
 
             //[origin url] | about&nbsp:client
-            var referrer = options["referrer"]?.ToString() ?? "";
+            var referrer = options?["referrer"]?.ToString() ?? "";
 
-            var integrity = options["integrity"]?.ToString() ?? "";
-            var keepAlive = (bool)(options["integrity"] ?? false);
+            var integrity = options?["integrity"]?.ToString() ?? "";
+            var keepAlive = (bool)(options?["integrity"] ?? false);
 
             //TODO: implement [signal] usage as AbortSignal
 
@@ -105,7 +105,7 @@ namespace DotnetFetch
 
         public static async Task<T> Fetch<T>(
             string resource,
-            JsonObject options,
+            JsonObject? options = default,
             CancellationToken cancellationToken = default
         )
         {
