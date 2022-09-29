@@ -1,6 +1,6 @@
 ﻿namespace DotnetFetch.Models
 {
-    public class FetchInvalidCharsetException : Exception
+    public class FetchInvalidCharsetException : ArgumentException
     {
         public FetchInvalidCharsetException(string charset) : base($"Invalid charset: {charset}") { }
     }

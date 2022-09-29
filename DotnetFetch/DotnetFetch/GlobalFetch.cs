@@ -91,26 +91,14 @@ namespace DotnetFetch
 
             var content = new StringContent(body, charset, contentType);
 
-            HttpResponseMessage result;
-
-            switch(method.ToLower())
+            HttpResponseMessage result = method.ToLower() switch
             {
-                case "get":
-                    result = await client.GetAsync(resource, cancellationToken);
-                    break;
-
-                case "post":
-                    result = await client.PostAsync(resource, content, cancellationToken);
-                    break;
-
-                case "put":
-                    result = await client.PutAsync(resource, content, cancellationToken);
-                    break;
-
-                case "delete":
-                    result = await client.DeleteAsync(resource);
-                    break;
-            }
+                "get" => await client.GetAsync(resource, cancellationToken),
+                "post" => await client.PostAsync(resource, content, cancellationToken),
+                "put" => await client.PutAsync(resource, content, cancellationToken),
+                "delete" => await client.DeleteAsync(resource, cancellationToken),
+                _ => throw new FetchInvalidMethodException(method),
+            };
 
             return new();
         }
