@@ -1,46 +1,51 @@
-﻿using System.Text.Json.Nodes;
+﻿using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace DotnetFetch.Models
 {
     public class Response
     {
-        public JsonObject Body { get; set; }
-        public JsonObject Headers { get; set; }
-        public short Status { get; set; } 
+        public Response(
+            string body,
+            Dictionary<string, dynamic> headers,
+            short status,
+            string statusText,
+            bool ok,
+            bool bodyUsed
+        )
+        {
+            Body = body;
+            Headers = headers;
+            Status = status;
+            StatusText = statusText;
+            Ok = ok;
+            BodyUsed = bodyUsed;
+        }
+
+        public string Body { get; set; }
+        public Dictionary<string, dynamic> Headers { get; set; }
+        public short Status { get; set; }
         public string StatusText { get; set; }
-        public string ResponseStatus { get; set; }
         public bool Ok { get; set; }
         public bool BodyUsed { get; set; }
-        public bool Redirected { get; set; }
 
-        public JsonObject Json()
-        {
-            return new JsonObject();
-        }
+        public JsonObject Json() => JsonSerializer.Deserialize<JsonObject>(Body)!;
 
-        public string Text()
-        {
-            return new("");
-        }
+        public string Text() => Body;
 
-        public byte[] Blob()
-        {
-            return default;
-        }
+        public byte[] Blob() => Encoding.UTF8.GetBytes(Text());
 
-        public byte[] ArrayBuffer()
-        {
-            return default;
-        }
+        public byte[] ArrayBuffer() => Blob();
 
-        public Response Clone()
-        {
-            return new();
-        }
-
-        public Response Redirect()
-        {
-            return new();
-        }
+        public Response Clone() =>
+            new(
+                Body,
+                Headers,
+                Status,
+                StatusText,
+                Ok,
+                BodyUsed
+            );
     }
 }

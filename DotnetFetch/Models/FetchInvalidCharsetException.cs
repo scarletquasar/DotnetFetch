@@ -2,6 +2,7 @@
 {
     public class FetchInvalidCharsetException : ArgumentException
     {
-        public FetchInvalidCharsetException(string charset) : base($"Invalid charset: {charset}") { }
+        public FetchInvalidCharsetException(string charset) : base($"Invalid charset: {charset}")
+        { }
     }
 }

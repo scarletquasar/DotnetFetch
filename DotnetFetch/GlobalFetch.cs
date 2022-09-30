@@ -2,14 +2,15 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace DotnetFetch
 {
     public static class GlobalFetch
     {
         public static async Task<Response> Fetch(
-            string resource, 
-            JsonObject? options = default, 
+            string resource,
+            JsonObject? options = default,
             CancellationToken cancellationToken = default
         )
         {
@@ -31,7 +32,7 @@ namespace DotnetFetch
             //default | no-store | reload | no-cache | force-cache | only-if-cached
             var cache = options?["cache"]?.ToString() ?? "default";
 
-            //follow | error | manual
+            //follow | manual // no support: error
             var redirect = options?["redirect"]?.ToString() ?? "follow";
 
             //[origin url] | about&nbsp:client
@@ -43,35 +44,38 @@ namespace DotnetFetch
             //TODO: implement [signal] usage as AbortSignal
 
             // Arrange: will mount an HttpClient object based in the resource
-            // and options, passed as arguments by the user
+            // and options, passed as arguments by the user, including handler 
+            // configuration
 
-            var client = new HttpClient
+            HttpClientHandler httpHandler = new()
             {
-                BaseAddress = new Uri(resource)
+                AllowAutoRedirect = redirect == "follow"
             };
+
+            var client = new HttpClient { BaseAddress = new Uri(resource) };
 
             // Arrange: will mount and apply the headers dictionary with the headers
             // JsonObject (for now, dynamic as value type is the best approach here)
 
             var headersJson = headers.ToJsonString();
             var headersBytes = new MemoryStream(Encoding.UTF8.GetBytes(headersJson));
-            var headersDictionary = await JsonSerializer.DeserializeAsync<Dictionary<string, dynamic>>(
-                headersBytes, 
-                cancellationToken: cancellationToken
-            );
+            var headersDictionary = await JsonSerializer.DeserializeAsync<
+                Dictionary<string, dynamic>
+            >(headersBytes, cancellationToken: cancellationToken);
 
-            headersDictionary?
-                .ToList()
-                .ForEach(
-                    header => client.DefaultRequestHeaders.Add(header.Key, header.Value)
-                 );
+            headersDictionary
+                ?.ToList()
+                .ForEach(header => client.DefaultRequestHeaders.Add(header.Key, header.Value));
 
             // Arrange: will get the encoding (Accept-Charset) and mime type
             // (Content-Type) headers to be passed into the HttpClient request
 
             string acceptCharset = (headersDictionary ?? new()).TryGetValue(
-                "Accept-Charset", out var _acceptCharset
-            ) ? _acceptCharset : "utf-8"; 
+                "Accept-Charset",
+                out var _acceptCharset
+            )
+                ? _acceptCharset
+                : "utf-8";
 
             var charset = acceptCharset.ToLowerInvariant() switch
             {
@@ -82,8 +86,11 @@ namespace DotnetFetch
             };
 
             string contentType = (headersDictionary ?? new()).TryGetValue(
-                "Content-Type", out var _contentType
-            ) ? _contentType : "text/plain";
+                "Content-Type",
+                out var _contentType
+            )
+                ? _contentType
+                : "text/plain";
 
             // Arrange: will generate the StringContent object containing the body,
             // charset and content type to be passed directly to the HttpClient request,
@@ -100,7 +107,14 @@ namespace DotnetFetch
                 _ => throw new FetchInvalidMethodException(method),
             };
 
-            return new();
+            var resultBody = await result.Content.ReadAsStringAsync(cancellationToken);
+            var resultHeaders = result.Headers.ToDictionary(x => x.Key, x => (dynamic)x.Value);
+            var status = (short)result.StatusCode;
+            var statusText = ReasonPhrases.GetReasonPhrase(status);
+            var ok = result.IsSuccessStatusCode;
+            var bodyUsed = body != "" && method != "get" && method != "delete";
+
+            return new(resultBody, resultHeaders, status, statusText, ok, bodyUsed);
         }
 
         public static async Task<T> Fetch<T>(
