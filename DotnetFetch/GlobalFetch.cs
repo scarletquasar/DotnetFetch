@@ -35,11 +35,7 @@ namespace DotnetFetch
             //follow | manual // no support: error
             var redirect = options?["redirect"]?.ToString() ?? "follow";
 
-            //[origin url] | about&nbsp:client
-            var referrer = options?["referrer"]?.ToString() ?? "";
-
-            var integrity = options?["integrity"]?.ToString() ?? "";
-            var keepAlive = (bool)(options?["integrity"] ?? false);
+            var keepAlive = (bool)(options?["keep-alive"] ?? false);
 
             // Arrange: will mount an HttpClient object based in the resource
             // and options, passed as arguments by the user, including handler 
@@ -64,6 +60,17 @@ namespace DotnetFetch
             headersDictionary
                 ?.ToList()
                 .ForEach(header => client.DefaultRequestHeaders.Add(header.Key, header.Value));
+
+            // Arrange: will get the credentials option to be passed as a
+            // (Access-Control-Allow-Credentials) header
+
+            var credentialsHeader = (!(credentials == "omit")).ToString().ToLower();
+            client.DefaultRequestHeaders.Add("Access-Control-Allow-Credentials", credentialsHeader);
+
+            // Arrange: will get the keep-alive option to be passed as a
+            // (ConnectionClose) header
+
+            client.DefaultRequestHeaders.ConnectionClose = keepAlive;
 
             // Arrange: will get the encoding (Accept-Charset) and mime type
             // (Content-Type) headers to be passed into the HttpClient request
