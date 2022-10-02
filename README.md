@@ -1,7 +1,8 @@
 # DotnetFetch
 
-Simple .NET implementation of JavaScript fetch API.
-Package is on [Nuget](https://www.nuget.org/packages/DotnetFetch/).
+- Simple .NET implementation of JavaScript fetch API.
+- Package is on [Nuget](https://www.nuget.org/packages/DotnetFetch/).
+- Following (partially) the [MDN](https://developer.mozilla.org/en-US/docs/Web/API/fetch) specifications.
 
 ## Installation
 
