@@ -63,6 +63,11 @@ namespace DotnetFetch
                 ?.ToList()
                 .ForEach(header => client.DefaultRequestHeaders.Add(header.Key, header.Value));
 
+            // Arrange: will get the mode (cors) option to be passed as a
+            // (Sec-Fetch-Mode) header
+
+            client.DefaultRequestHeaders.Add("Sec-Fetch-Mode", mode);
+
             // Arrange: will get the credentials option to be passed as a
             // (Access-Control-Allow-Credentials) header
 
