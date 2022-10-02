@@ -3,6 +3,8 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.WebUtilities;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace DotnetFetch
 {
@@ -68,9 +70,17 @@ namespace DotnetFetch
             client.DefaultRequestHeaders.Add("Access-Control-Allow-Credentials", credentialsHeader);
 
             // Arrange: will get the keep-alive option to be passed as a
-            // (ConnectionClose) header
+            // (Connection-Close) header
 
             client.DefaultRequestHeaders.ConnectionClose = keepAlive;
+
+            // Arrange: will get the cache option to be passed as a
+            // (Cache-Control) header
+
+            client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue
+            {
+                NoCache = cache == "default" || cache == "force-cache"
+            };
 
             // Arrange: will get the encoding (Accept-Charset) and mime type
             // (Content-Type) headers to be passed into the HttpClient request
