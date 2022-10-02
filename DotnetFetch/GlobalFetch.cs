@@ -3,7 +3,6 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.WebUtilities;
-using System.Reflection.PortableExecutable;
 
 namespace DotnetFetch
 {
@@ -36,11 +35,7 @@ namespace DotnetFetch
             //follow | manual // no support: error
             var redirect = options?["redirect"]?.ToString() ?? "follow";
 
-            //[origin url] | about&nbsp:client
-            var referrer = options?["referrer"]?.ToString() ?? "";
-
-            var integrity = options?["integrity"]?.ToString() ?? "";
-            var keepAlive = (bool)(options?["integrity"] ?? false);
+            var keepAlive = (bool)(options?["keep-alive"] ?? false);
 
             //TODO: implement [signal] usage as AbortSignal
 
@@ -73,6 +68,11 @@ namespace DotnetFetch
 
             var credentialsHeader = (!(credentials == "omit")).ToString().ToLower();
             client.DefaultRequestHeaders.Add("Access-Control-Allow-Credentials", credentialsHeader);
+
+            // Arrange: will get the keep-alive option to be passed as a
+            // (ConnectionClose) header
+
+            client.DefaultRequestHeaders.ConnectionClose = keepAlive;
 
             // Arrange: will get the encoding (Accept-Charset) and mime type
             // (Content-Type) headers to be passed into the HttpClient request
