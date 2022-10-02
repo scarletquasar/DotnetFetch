@@ -6,7 +6,7 @@ Package is on [Nuget](https://www.nuget.org/packages/DotnetFetch/).
 ## Installation
 
 ```bash
-Install-Package DotnetFetch
+> Install-Package DotnetFetch
 ```
 
 ## Usage
