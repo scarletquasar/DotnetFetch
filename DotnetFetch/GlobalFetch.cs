@@ -41,8 +41,6 @@ namespace DotnetFetch
             var integrity = options?["integrity"]?.ToString() ?? "";
             var keepAlive = (bool)(options?["integrity"] ?? false);
 
-            //TODO: implement [signal] usage as AbortSignal
-
             // Arrange: will mount an HttpClient object based in the resource
             // and options, passed as arguments by the user, including handler 
             // configuration
