@@ -3,6 +3,8 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.WebUtilities;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace DotnetFetch
 {
@@ -61,6 +63,11 @@ namespace DotnetFetch
                 ?.ToList()
                 .ForEach(header => client.DefaultRequestHeaders.Add(header.Key, header.Value));
 
+            // Arrange: will get the mode (cors) option to be passed as a
+            // (Sec-Fetch-Mode) header
+
+            client.DefaultRequestHeaders.Add("Sec-Fetch-Mode", mode);
+
             // Arrange: will get the credentials option to be passed as a
             // (Access-Control-Allow-Credentials) header
 
@@ -68,9 +75,17 @@ namespace DotnetFetch
             client.DefaultRequestHeaders.Add("Access-Control-Allow-Credentials", credentialsHeader);
 
             // Arrange: will get the keep-alive option to be passed as a
-            // (ConnectionClose) header
+            // (Connection-Close) header
 
             client.DefaultRequestHeaders.ConnectionClose = keepAlive;
+
+            // Arrange: will get the cache option to be passed as a
+            // (Cache-Control) header
+
+            client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue
+            {
+                NoCache = cache == "default" || cache == "force-cache"
+            };
 
             // Arrange: will get the encoding (Accept-Charset) and mime type
             // (Content-Type) headers to be passed into the HttpClient request

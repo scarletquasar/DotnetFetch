@@ -16,5 +16,11 @@ namespace DotnetFetch.Tests
             Assert.Equal("delectus aut autem", model["title"].GetString());
             Assert.False(model["completed"].GetBoolean());
         }
+
+        [Fact]
+        public async void FetchGenericFunctionShouldWorkProperly()
+        {
+
+        }
     }
 }
