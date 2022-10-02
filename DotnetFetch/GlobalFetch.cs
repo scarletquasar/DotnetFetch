@@ -98,14 +98,24 @@ namespace DotnetFetch
 
             var content = new StringContent(body, charset, contentType);
 
-            HttpResponseMessage result = method.ToLower() switch
+            HttpMethod httpMethod = method.ToLower() switch
             {
-                "get" => await client.GetAsync(resource, cancellationToken),
-                "post" => await client.PostAsync(resource, content, cancellationToken),
-                "put" => await client.PutAsync(resource, content, cancellationToken),
-                "delete" => await client.DeleteAsync(resource, cancellationToken),
+                "get" => HttpMethod.Get,
+                "post" => HttpMethod.Post,
+                "put" => HttpMethod.Put,
+                "delete" => HttpMethod.Delete,
+                "patch" => HttpMethod.Patch,
+                "head" => HttpMethod.Head,
+                "options" => HttpMethod.Options,
                 _ => throw new FetchInvalidMethodException(method),
             };
+
+            HttpRequestMessage requestMessage = new(httpMethod, resource)
+            {
+                Content = content
+            };
+
+            var result = await client.SendAsync(requestMessage);
 
             var resultBody = await result.Content.ReadAsStringAsync(cancellationToken);
             var resultHeaders = result.Headers.ToDictionary(x => x.Key, x => (dynamic)x.Value);
