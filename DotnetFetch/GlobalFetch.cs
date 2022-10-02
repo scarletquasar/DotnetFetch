@@ -115,7 +115,7 @@ namespace DotnetFetch
                 Content = content
             };
 
-            var result = await client.SendAsync(requestMessage);
+            var result = await client.SendAsync(requestMessage, cancellationToken);
 
             var resultBody = await result.Content.ReadAsStringAsync(cancellationToken);
             var resultHeaders = result.Headers.ToDictionary(x => x.Key, x => (dynamic)x.Value);
