@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.WebUtilities;
+using System.Reflection.PortableExecutable;
 
 namespace DotnetFetch
 {
@@ -66,6 +67,12 @@ namespace DotnetFetch
             headersDictionary
                 ?.ToList()
                 .ForEach(header => client.DefaultRequestHeaders.Add(header.Key, header.Value));
+
+            // Arrange: will get the credentials option to be passed as a
+            // (Access-Control-Allow-Credentials) header
+
+            var credentialsHeader = (!(credentials == "omit")).ToString().ToLower();
+            client.DefaultRequestHeaders.Add("Access-Control-Allow-Credentials", credentialsHeader);
 
             // Arrange: will get the encoding (Accept-Charset) and mime type
             // (Content-Type) headers to be passed into the HttpClient request
