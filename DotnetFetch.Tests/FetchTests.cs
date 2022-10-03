@@ -20,6 +20,19 @@ namespace DotnetFetch.Tests
         }
 
         [Fact]
+        public async void FetchGenericFunctionShouldWorkProperly()
+        {
+            var result = await GlobalFetch.Fetch<Dictionary<string, JsonElement>>(
+                "https://jsonplaceholder.typicode.com/todos/1"
+            );
+
+            Assert.Equal(1, result["userId"].GetInt32());
+            Assert.Equal(1, result["id"].GetInt32());
+            Assert.Equal("delectus aut autem", result["title"].GetString());
+            Assert.False(result["completed"].GetBoolean());
+        }
+
+        [Fact]
         public async Task FetchInvalidMethodShouldThrowException()
         {
             var fetchOptions = new JsonObject
@@ -36,9 +49,22 @@ namespace DotnetFetch.Tests
         }
 
         [Fact]
-        public async void FetchGenericFunctionShouldWorkProperly()
+        public async Task FetchInvalidCharsetShouldThrowException()
         {
+            var fetchOptions = new JsonObject
+            {
+                ["headers"] = new JsonObject()
+                {
+                    ["Accept-Charset"] = "invalid"
+                }
+            };
 
+            await Assert.ThrowsAsync<FetchInvalidCharsetException>(
+                () => GlobalFetch.Fetch(
+                    "https://jsonplaceholder.typicode.com/todos/1",
+                    fetchOptions
+                )
+            );
         }
     }
 }

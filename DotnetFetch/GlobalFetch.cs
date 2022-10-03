@@ -10,6 +10,8 @@ namespace DotnetFetch
 {
     public static class GlobalFetch
     {
+        public static bool EnableCorsException { get; set; } = false;
+
         public static async Task<Response> Fetch(
             string resource,
             JsonObject? options = default,
@@ -56,12 +58,16 @@ namespace DotnetFetch
             var headersJson = headers.ToJsonString();
             var headersBytes = new MemoryStream(Encoding.UTF8.GetBytes(headersJson));
             var headersDictionary = await JsonSerializer.DeserializeAsync<
-                Dictionary<string, dynamic>
+                Dictionary<string, string>
             >(headersBytes, cancellationToken: cancellationToken);
 
             headersDictionary
                 ?.ToList()
-                .ForEach(header => client.DefaultRequestHeaders.Add(header.Key, header.Value));
+                .ForEach(
+                    header => client.DefaultRequestHeaders.Add(
+                        header.Key, header.Value
+                    )
+                );
 
             // Arrange: will get the mode (cors) option to be passed as a
             // (Sec-Fetch-Mode) header
@@ -72,7 +78,9 @@ namespace DotnetFetch
             // (Access-Control-Allow-Credentials) header
 
             var credentialsHeader = (!(credentials == "omit")).ToString().ToLower();
-            client.DefaultRequestHeaders.Add("Access-Control-Allow-Credentials", credentialsHeader);
+            client.DefaultRequestHeaders.Add(
+                "Access-Control-Allow-Credentials", credentialsHeader
+            );
 
             // Arrange: will get the keep-alive option to be passed as a
             // (Connection-Close) header
@@ -143,6 +151,25 @@ namespace DotnetFetch
             var statusText = ReasonPhrases.GetReasonPhrase(status);
             var ok = result.IsSuccessStatusCode;
             var bodyUsed = body != "" && method != "get" && method != "delete";
+
+            // Act: Checks for cors exceptions, surely, there is a better way
+            // to check for CORS exceptions, a more complex research will be
+            // made to create a more reliable solution
+
+            if(
+                EnableCorsException
+                && !ok 
+                || (
+                    resultBody.ToLower().Contains("access-control")
+                    || resultBody.ToLower().Contains("CORS")
+                )
+            )
+            {
+                throw new FetchCorsException();
+            }
+
+            // Act: Creates a new Response object, based on "fetch" default
+            // specification with base on MDN
 
             return new(resultBody, resultHeaders, status, statusText, ok, bodyUsed);
         }
