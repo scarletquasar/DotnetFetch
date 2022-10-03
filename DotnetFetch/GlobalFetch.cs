@@ -158,7 +158,6 @@ namespace DotnetFetch
 
             if(
                 EnableCorsException
-                && mode == "cors" 
                 && !ok 
                 || (
                     resultBody.ToLower().Contains("access-control")
