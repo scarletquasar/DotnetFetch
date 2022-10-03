@@ -10,6 +10,8 @@ namespace DotnetFetch
 {
     public static class GlobalFetch
     {
+        public static bool EnableCorsException { get; set; } = false;
+
         public static async Task<Response> Fetch(
             string resource,
             JsonObject? options = default,
@@ -61,7 +63,11 @@ namespace DotnetFetch
 
             headersDictionary
                 ?.ToList()
-                .ForEach(header => client.DefaultRequestHeaders.Add(header.Key, header.Value));
+                .ForEach(
+                    header => client.DefaultRequestHeaders.Add(
+                        header.Key, header.Value
+                    )
+                );
 
             // Arrange: will get the mode (cors) option to be passed as a
             // (Sec-Fetch-Mode) header
@@ -145,6 +151,22 @@ namespace DotnetFetch
             var statusText = ReasonPhrases.GetReasonPhrase(status);
             var ok = result.IsSuccessStatusCode;
             var bodyUsed = body != "" && method != "get" && method != "delete";
+
+            // Act: Checks for cors exceptions, surely, there is a better way
+            // to check for CORS exceptions but this works for now
+
+            if(
+                EnableCorsException
+                && mode == "cors" 
+                && !ok 
+                || (
+                    resultBody.ToLower().Contains("access-control")
+                    || resultBody.ToLower().Contains("CORS")
+                )
+            )
+            {
+                throw new FetchCorsException();
+            }
 
             return new(resultBody, resultHeaders, status, statusText, ok, bodyUsed);
         }
