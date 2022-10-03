@@ -56,7 +56,7 @@ namespace DotnetFetch
             var headersJson = headers.ToJsonString();
             var headersBytes = new MemoryStream(Encoding.UTF8.GetBytes(headersJson));
             var headersDictionary = await JsonSerializer.DeserializeAsync<
-                Dictionary<string, dynamic>
+                Dictionary<string, string>
             >(headersBytes, cancellationToken: cancellationToken);
 
             headersDictionary
@@ -72,7 +72,9 @@ namespace DotnetFetch
             // (Access-Control-Allow-Credentials) header
 
             var credentialsHeader = (!(credentials == "omit")).ToString().ToLower();
-            client.DefaultRequestHeaders.Add("Access-Control-Allow-Credentials", credentialsHeader);
+            client.DefaultRequestHeaders.Add(
+                "Access-Control-Allow-Credentials", credentialsHeader
+            );
 
             // Arrange: will get the keep-alive option to be passed as a
             // (Connection-Close) header
