@@ -21,7 +21,7 @@ namespace DotnetFetch.Tests
         public async void FetchInvalidMethodShouldThrowException()
         {
             var fetchOptions = new JsonObject();
-            options["method"] = "invalid";
+            fetchOptions["method"] = "invalid";
             Assert.Throws<FetchInvalidMethodException>(
                 () => await GlobalFetch.Fetch(
                     "https://jsonplaceholder.typicode.com/todos/1",
