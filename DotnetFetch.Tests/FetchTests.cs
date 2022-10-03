@@ -1,5 +1,7 @@
 using DotnetFetch;
+using DotnetFetch.Models;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace DotnetFetch.Tests
 {
@@ -18,12 +20,15 @@ namespace DotnetFetch.Tests
         }
 
         [Fact]
-        public async void FetchInvalidMethodShouldThrowException()
+        public async Task FetchInvalidMethodShouldThrowException()
         {
-            var fetchOptions = new JsonObject();
-            fetchOptions["method"] = "invalid";
-            Assert.Throws<FetchInvalidMethodException>(
-                () => await GlobalFetch.Fetch(
+            var fetchOptions = new JsonObject
+            {
+                ["method"] = "invalid"
+            };
+
+            await Assert.ThrowsAsync<FetchInvalidMethodException>(
+                () => GlobalFetch.Fetch(
                     "https://jsonplaceholder.typicode.com/todos/1",
                     fetchOptions
                 )
