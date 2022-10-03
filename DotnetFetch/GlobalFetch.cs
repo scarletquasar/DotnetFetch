@@ -153,7 +153,8 @@ namespace DotnetFetch
             var bodyUsed = body != "" && method != "get" && method != "delete";
 
             // Act: Checks for cors exceptions, surely, there is a better way
-            // to check for CORS exceptions but this works for now
+            // to check for CORS exceptions, a more complex research will be
+            // made to create a more reliable solution
 
             if(
                 EnableCorsException
