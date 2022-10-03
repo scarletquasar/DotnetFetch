@@ -168,6 +168,9 @@ namespace DotnetFetch
                 throw new FetchCorsException();
             }
 
+            // Act: Creates a new Response object, based on "fetch" default
+            // specification with base on MDN
+
             return new(resultBody, resultHeaders, status, statusText, ok, bodyUsed);
         }
 
