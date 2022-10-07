@@ -128,7 +128,6 @@ namespace DotnetFetch
             HttpRequestMessage requestMessage = new(httpMethod, resource) { Content = content };
 
             var result = await client.SendAsync(requestMessage, cancellationToken);
-
             var resultBody = await result.Content.ReadAsStringAsync(cancellationToken);
             var resultHeaders = result.Headers.ToDictionary(x => x.Key, x => (dynamic)x.Value);
             var status = (short)result.StatusCode;
@@ -147,7 +146,7 @@ namespace DotnetFetch
                 EnableCorsException && !ok
                 || (
                     resultBody.ToLower().Contains("access-control")
-                    || resultBody.ToLower().Contains("CORS")
+                    || resultBody.ToLower().Contains("cors")
                 )
             )
             {
