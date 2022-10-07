@@ -35,16 +35,11 @@ namespace DotnetFetch.Tests
         [Fact]
         public async Task FetchInvalidMethodShouldThrowException()
         {
-            var fetchOptions = new JsonObject
-            {
-                ["method"] = "invalid"
-            };
+            var fetchOptions = new JsonObject { ["method"] = "invalid" };
 
             await Assert.ThrowsAsync<FetchInvalidMethodException>(
-                () => GlobalFetch.Fetch(
-                    "https://jsonplaceholder.typicode.com/todos/1",
-                    fetchOptions
-                )
+                () =>
+                    GlobalFetch.Fetch("https://jsonplaceholder.typicode.com/todos/1", fetchOptions)
             );
         }
 
@@ -53,17 +48,12 @@ namespace DotnetFetch.Tests
         {
             var fetchOptions = new JsonObject
             {
-                ["headers"] = new JsonObject()
-                {
-                    ["Accept-Charset"] = "invalid"
-                }
+                ["headers"] = new JsonObject() { ["Accept-Charset"] = "invalid" }
             };
 
             await Assert.ThrowsAsync<FetchInvalidCharsetException>(
-                () => GlobalFetch.Fetch(
-                    "https://jsonplaceholder.typicode.com/todos/1",
-                    fetchOptions
-                )
+                () =>
+                    GlobalFetch.Fetch("https://jsonplaceholder.typicode.com/todos/1", fetchOptions)
             );
         }
     }
