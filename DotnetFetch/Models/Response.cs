@@ -38,14 +38,6 @@ namespace DotnetFetch.Models
 
         public byte[] ArrayBuffer() => Blob();
 
-        public Response Clone() =>
-            new(
-                Body,
-                Headers,
-                Status,
-                StatusText,
-                Ok,
-                BodyUsed
-            );
+        public Response Clone() => new(Body, Headers, Status, StatusText, Ok, BodyUsed);
     }
 }
