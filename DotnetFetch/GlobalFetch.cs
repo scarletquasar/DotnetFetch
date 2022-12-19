@@ -119,7 +119,11 @@ namespace DotnetFetch
                 "post" => HttpMethod.Post,
                 "put" => HttpMethod.Put,
                 "delete" => HttpMethod.Delete,
+#if NETSTANDARD
+                "patch" => new HttpMethod("PATCH"),
+#else
                 "patch" => HttpMethod.Patch,
+#endif
                 "head" => HttpMethod.Head,
                 "options" => HttpMethod.Options,
                 _ => throw new FetchInvalidMethodException(fetchOptions.Method),
@@ -128,7 +132,11 @@ namespace DotnetFetch
             HttpRequestMessage requestMessage = new(httpMethod, resource) { Content = content };
 
             var result = await client.SendAsync(requestMessage, cancellationToken);
+#if NETSTANDARD
+            var resultBody = await result.Content.ReadAsStringAsync();
+#else
             var resultBody = await result.Content.ReadAsStringAsync(cancellationToken);
+#endif
             var resultHeaders = result.Headers.ToDictionary(x => x.Key, x => (dynamic)x.Value);
             var status = (short)result.StatusCode;
             var statusText = ReasonPhrases.GetReasonPhrase(status);
