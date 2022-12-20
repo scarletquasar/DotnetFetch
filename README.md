@@ -13,17 +13,17 @@
 ## Usage
 
 ```cs
-using DotnetFetch;
+using static DotnetFetch.GlobalFetch;
 
-var result = await GlobalFetch.Fetch("https://jsonplaceholder.typicode.com/todos/1");
+var result = await Fetch("https://jsonplaceholder.typicode.com/todos/1");
 
 Console.WriteLine(result.Text());
 ```
 
 ```cs
-using DotnetFetch;
+using static DotnetFetch.GlobalFetch;
 
-var result = await GlobalFetch.Fetch<string>("https://jsonplaceholder.typicode.com/todos/1");
+var result = await Fetch<string>("https://jsonplaceholder.typicode.com/todos/1");
 
 Console.WriteLine(result);
 ```
