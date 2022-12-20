@@ -3,7 +3,6 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.WebUtilities;
-using System.Net.Http;
 using System.Net.Http.Headers;
 
 namespace DotnetFetch
@@ -113,23 +112,8 @@ namespace DotnetFetch
 
             var content = new StringContent(fetchOptions.Body, charset, contentType);
 
-            HttpMethod httpMethod = fetchOptions.Method.ToLower() switch
-            {
-                "get" => HttpMethod.Get,
-                "post" => HttpMethod.Post,
-                "put" => HttpMethod.Put,
-                "delete" => HttpMethod.Delete,
-#if NETSTANDARD
-                "patch" => new HttpMethod("PATCH"),
-#else
-                "patch" => HttpMethod.Patch,
-#endif
-                "head" => HttpMethod.Head,
-                "options" => HttpMethod.Options,
-                _ => throw new FetchInvalidMethodException(fetchOptions.Method),
-            };
-
-            HttpRequestMessage requestMessage = new(httpMethod, resource) { Content = content };
+            var httpMethod = new HttpMethod(fetchOptions.Method.ToUpper());
+            var requestMessage = new HttpRequestMessage(httpMethod, resource) { Content = content };
 
             var result = await client.SendAsync(requestMessage, cancellationToken);
 #if NETSTANDARD
