@@ -10,11 +10,13 @@ namespace DotnetFetch
     public static class GlobalFetch
     {
         public static bool EnableCorsException { get; set; } = false;
+        private static HttpClient? _internalSingletonClient = null;
 
         public static async Task<Response> Fetch(
             string resource,
             JsonObject? options = default,
-            CancellationToken cancellationToken = default
+            CancellationToken cancellationToken = default,
+            HttpClient? injectableClient = default
         )
         {
             // Arrange: generating the FetchOptions object
@@ -42,7 +44,23 @@ namespace DotnetFetch
             HttpClientHandler httpHandler =
                 new() { AllowAutoRedirect = fetchOptions.Redirect == "follow" };
 
-            var client = new HttpClient { BaseAddress = new Uri(resource) };
+            HttpClient client;
+
+            if (injectableClient != null)
+            {
+                client = injectableClient;
+
+                if (injectableClient.BaseAddress is null)
+                {
+                    client.BaseAddress = new Uri(resource);
+                }
+            }
+            else
+            {
+                _internalSingletonClient = new HttpClient();
+                client = _internalSingletonClient;
+                client.BaseAddress = new Uri(resource);
+            }
 
             // Arrange: will mount and apply the headers dictionary with the headers
             // JsonObject (for now, dynamic as value type is the best approach here)
