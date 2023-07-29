@@ -7,11 +7,26 @@ using System.Net.Http.Headers;
 
 namespace DotnetFetch
 {
+    /// <summary>
+    /// Defines methods for fetching resources from an external provider over the network.
+    /// </summary>
     public static class GlobalFetch
     {
+        /// <summary>
+        /// Gets or sets whether or not the fetch method will throw a <see cref="FetchCorsException"/> when a CORS error is detected.
+        /// </summary>
+        /// <remarks>The default value is <see langword="false"/>.</remarks>
         public static bool EnableCorsException { get; set; } = false;
         private static HttpClient? _internalSingletonClient = null;
 
+        /// <summary>
+        /// Fetches a resource from an external provider over the network.
+        /// </summary>
+        /// <param name="resource">The URL of the resource to fetch.</param>
+        /// <param name="options">The options to use when fetching the resource.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> to cancel the request.</param>
+        /// <param name="injectableClient">An <see cref="HttpClient"/> to use for the request. If <see langword="null"/>, a new <see cref="HttpClient"/> will be created.</param>
+        /// <returns>A <see cref="Response"/> object containing the response from the request.</returns>
         public static async Task<Response> Fetch(
             string resource,
             JsonObject? options = default,
@@ -169,6 +184,16 @@ namespace DotnetFetch
             return new(resultBody, resultHeaders, status, statusText, ok, bodyUsed);
         }
 
+        /// <summary>
+        /// Fetches a resource from an external provider over the network.
+        /// </summary>
+        /// <typeparam name="T">The type to deserialize the response body to.</typeparam>
+        /// <param name="resource">The URL of the resource to fetch.</param>
+        /// <param name="options">The options to use when fetching the resource.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> to cancel the request.</param>
+        /// <returns>The deserialized response from the external provider.</returns>
+        /// <remarks>This method is a shorthand for <see cref="Fetch(string, JsonObject?, CancellationToken, HttpClient?)"/> with <paramref name="injectableClient"/> set to <see langword="null"/>.</remarks>
+        /// <seealso cref="Fetch(string, JsonObject?, CancellationToken, HttpClient?)"/>
         public static async Task<T> Fetch<T>(
             string resource,
             JsonObject? options = default,
