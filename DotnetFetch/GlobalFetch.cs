@@ -27,6 +27,8 @@ namespace DotnetFetch
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to cancel the request.</param>
         /// <param name="injectableClient">An <see cref="HttpClient"/> to use for the request. If <see langword="null"/>, a new <see cref="HttpClient"/> will be created.</param>
         /// <returns>A <see cref="Response"/> object containing the response from the request.</returns>
+        /// <exception cref="FetchCorsException">Thrown when a CORS error is detected and <see cref="EnableCorsException"/> is <see langword="true"/>.</exception>
+        /// <exception cref="FetchInvalidCharsetException">Thrown when an invalid charset is detected.</exception>
         public static async Task<Response> Fetch(
             string resource,
             JsonObject? options = default,
