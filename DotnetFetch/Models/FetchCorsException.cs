@@ -11,6 +11,6 @@
         /// Creates a new <see cref="FetchCorsException"/> with a default message.
         /// </summary>
         public FetchCorsException()
-            : base("A CORS excepion has occurred, check your request options") { }
+            : base("A CORS exception has occurred, check your request options.") { }
     }
 }
