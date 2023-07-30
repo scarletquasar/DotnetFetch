@@ -46,7 +46,7 @@ namespace DotnetFetch
                 //cors | no-cors | same-origin
                 options?["mode"]?.ToString() ?? "no-cors",
                 //omit | same-origin | include
-                options?["credentials"]?.ToString() ?? "same-orgin",
+                options?["credentials"]?.ToString() ?? "same-origin",
                 //default | no-store | reload | no-cache | force-cache | only-if-cached
                 options?["cache"]?.ToString() ?? "default",
                 //follow | manual // no support: error
