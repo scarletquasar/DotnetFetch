@@ -5,6 +5,7 @@
     /// </summary>
     /// <remarks>This exception is a form of <see cref="ArgumentException"/>.</remarks>
     /// <seealso cref="ArgumentException"/>
+    [Obsolete(message: "This exception is obsolete and will be removed in a future version. Please use CorsException instead.")]
     public class FetchCorsException : ArgumentException
     {
         /// <summary>
