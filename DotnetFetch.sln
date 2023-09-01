@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32819.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotnetFetch", "DotnetFetch\DotnetFetch.csproj", "{D547B64B-13DB-4565-B7E4-082F7675F625}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotnetFetch", "src\DotnetFetch\DotnetFetch.csproj", "{D547B64B-13DB-4565-B7E4-082F7675F625}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetFetch.Tests", "DotnetFetch.Tests\DotnetFetch.Tests.csproj", "{C6D2D960-B361-4A36-94C9-6703D82C0D39}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetFetch.Tests", "test\DotnetFetch.Tests\DotnetFetch.Tests.csproj", "{C6D2D960-B361-4A36-94C9-6703D82C0D39}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

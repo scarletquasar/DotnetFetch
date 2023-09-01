@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DotnetFetch\DotnetFetch.csproj" />
+    <ProjectReference Include="..\..\src\DotnetFetch\DotnetFetch.csproj" />
   </ItemGroup>
 
 </Project>
