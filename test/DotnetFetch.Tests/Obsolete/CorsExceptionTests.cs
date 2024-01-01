@@ -8,10 +8,8 @@ using System;
 public class CorsExceptionTests
 {
     [Fact]
-    public void Catch_FetchCorsException_HandlesCorsException()
-    {
+    public void Catch_FetchCorsException_HandlesCorsException() =>
         _ = Assert.Throws<CorsException>(TestAction);
-    }
 
     private void TestAction()
     {
