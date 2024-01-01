@@ -13,5 +13,12 @@
         /// </summary>
         public FetchCorsException()
             : base("A CORS exception has occurred, check your request options.") { }
+        
+        /// <summary>
+        /// Creates a new <see cref="FetchCorsException"/> with a custom message.
+        /// </summary>
+        /// <param name="message">The message to use for the exception.</param>
+        internal FetchCorsException(string message)
+            : base(message) { }
     }
 }
