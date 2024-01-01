@@ -14,5 +14,14 @@
         /// <param name="charset">The invalid charset that was detected.</param>
         public FetchInvalidCharsetException(string charset) : base($"Invalid charset: {charset}")
         { }
+        
+        /// <summary>
+        /// Creates a new <see cref="FetchInvalidCharsetException"/> with a custom message.
+        /// </summary>
+        /// <param name="charset">The invalid charset that was detected.</param>
+        /// <param name="message">The message to use for the exception.</param>
+        internal FetchInvalidCharsetException(string charset, string message)
+            : base(message)
+        { }
     }
 }
